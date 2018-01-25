@@ -46,11 +46,9 @@ class CreditCheck
       puts "The number is invalid!"
     end
   end
-  # Output
-  ## If it is valid, print "The number is valid!"
-  ## If it is invalid, print "The number is invalid!"
+
   def runner
-    #Commented out code in block adds user interface in terminal
+    #Commented out code in this block adds user interface in terminal
     # puts "Enter a card number"
     # @card_number = gets.chomp
     if @card_number.length == 15 || @card_number.length == 16
@@ -62,7 +60,7 @@ class CreditCheck
   end
 end
 
-# test_card = CreditCheck.new("4929735477250543")
-# test_card.runner
-
+# Code Below tests the unknown number from the assignment
 # card_number = "4929735477250543"
+# test_card = CreditCheck.new(card_number)
+# test_card.runner
