@@ -4,26 +4,56 @@ require 'minitest/pride'
 require './lib/credit_check.rb'
 
 class TestCreditCheck < Minitest::Test
-  def test_credit_check_instance
-    credit_check = CreditCheck.new
-    assert_instance_of CreditCheck, credit_check
+  def setup
+    @credit_check = CreditCheck.new("12345678")
+    @numbers = {
+      "12345678" => [2,2,6,4,10,6,14,8],
+      "123456789012345" => [1,4,3,8,5,12,7,16,9,0,1,4,3,8,5],
+      "1234567890123456" => [2,2,6,4,10,6,14,8,18,0,2,2,6,4,10,6]
+    }
   end
 
-  def test_can_take_card_numbers
-    numbers = ["5541808923795240", "4024007136512380", "6011797668867828"]
-    numbers.each do |test_number|
-      credit_check = CreditCheck.new(test_number)
-      assert credit_check.card_number
+  def test_instances_can_take_card_numbers
+    @numbers.keys.each do |number|
+      credit_check = CreditCheck.new(number)
+      assert_instance_of CreditCheck, credit_check
+      assert_equal number, credit_check.card_number
     end
   end
 
-  def test_create_number_array
-    credit_check = CreditCheck.new("12345678")
-    assert_equal [1,2,3,4,5,6,7,8], credit_check.array
+  def test_array_of_ints
+    assert_equal [1,2,3,4,5,6,7,8], @credit_check.array_of_ints
   end
 
-  def test_double_numbers_right_to_left
-    credit_check = CreditCheck.new("12345678")
-    assert_equal [1,4,3,8,5,12,7,16], credit_check.doubles
+  def test_double_every_other #tests strings of different lengths
+    @numbers.each do |card_number, doubled_array|
+      credit_check = CreditCheck.new(card_number)
+      assert_equal doubled_array, credit_check.double_every_other
+    end
   end
+
+  def test_sum_digits_over_ten
+    assert_equal [2,2,6,4,1,6,5,8], @credit_check.sum_digits_over_ten
+  end
+
+  def test_validate_card
+    valid = ["5541808923795240", "4024007136512380", "6011797668867828"]
+    invalid = ["5541801923795240", "4024007106512380", "6011797668868728"]
+    valid.each do |card_number|
+      credit_check = CreditCheck.new(card_number)
+      assert_output("The number is valid!\n") { credit_check.validate_card }
+    end
+    invalid.each do |card_number|
+      credit_check = CreditCheck.new(card_number)
+      assert_output("The number is invalid!\n") { credit_check.validate_card }
+    end
+  end
+
+  def test_runner
+    to_short = CreditCheck.new("12345678")
+    assert_output("Not the correct length. Please try again.\n") { to_short.runner }
+    right_length = CreditCheck.new("5541808923795240")
+    assert_output("The number is valid!\n") { right_length.runner }
+  end
+
 end
