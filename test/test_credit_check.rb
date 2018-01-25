@@ -8,7 +8,7 @@ class TestCreditCheck < Minitest::Test
     @credit_check = CreditCheck.new("12345678")
     @numbers = {
       "12345678" => [2,2,6,4,10,6,14,8],
-      "123456789012345" => [1,4,3,8,5,12,7,16,9,0,1,4,3,8,5],
+      "342804633855673" => [3,8,2,16,0,8,6,6,3,16,5,10,6,14,3],
       "1234567890123456" => [2,2,6,4,10,6,14,8,18,0,2,2,6,4,10,6]
     }
   end
@@ -37,8 +37,8 @@ class TestCreditCheck < Minitest::Test
   end
 
   def test_validate_card
-    valid = ["5541808923795240", "4024007136512380", "6011797668867828"]
-    invalid = ["5541801923795240", "4024007106512380", "6011797668868728"]
+    valid = ["5541808923795240", "4024007136512380", "6011797668867828", "342804633855673"]
+    invalid = ["5541801923795240", "4024007106512380", "6011797668868728", "342801633855673"]
     valid.each do |card_number|
       credit_check = CreditCheck.new(card_number)
       assert_output("The number is valid!\n") { credit_check.validate_card }
@@ -55,5 +55,4 @@ class TestCreditCheck < Minitest::Test
     right_length = CreditCheck.new("5541808923795240")
     assert_output("The number is valid!\n") { right_length.runner }
   end
-
 end
